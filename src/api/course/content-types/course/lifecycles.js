@@ -1,11 +1,13 @@
 const axios = require("axios");
+var  vidData="";
 
 module.exports = {
 
-    async beforeCreate(event) {
+    async afterCreate(event) {
 
-        const { data, where, select, populate } = event.params;
-        
+        const { data, result} = event;
+
+        console.log("result",result);
         const video={
             "name":"123testest"
         }
@@ -33,28 +35,20 @@ module.exports = {
               }
             }
           ).then(function(res){
-                console.log("get",res.data.data);    
-                const  vidData=res.data.data;
-                strapi.service('api::course.course').create( {
-                    data: {
-            
-                        video:vidData,
-                        title:data.title,
-                        description:data.description,
-                        showcase_vimeo_url:data.showcase_vimeo_url,
-                       
-                        // request:event,   
+            console.log("result",result.id);
+            console.log("res.data.data",res.data.data);
+                strapi.service('api::course.course').update(result.id ,{
+                  data: {
           
-          
-                    },
-                })
+                      video:res.data.data,   
+                  },
+              })        
         
               
             }) .catch(error => {
               console.log("errrrorrr",error.message)
            })
         });
-
 
     },
   }
