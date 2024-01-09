@@ -26,7 +26,7 @@ module.exports = {
        
       ).then(async function(response){
         
-      await  axios.get("https://api.vimeo.com/users/213493461/albums/10888770/videos" 
+      await  axios.get(event.params.data.showcase_vimeo_url //"https://api.vimeo.com/users/213493461/albums/10888770/videos" 
         ,
         {
           headers: {
