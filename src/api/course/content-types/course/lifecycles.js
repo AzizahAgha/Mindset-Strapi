@@ -3,53 +3,46 @@ var  vidData="";
 
 module.exports = {
 
-    async afterCreate(event) {
+  async beforeCreate(event) {
 
-        const { data, result} = event;
+    const { data, where, select, populate } = event.params;
 
-        console.log("result",result);
-        const video={
-            "name":"123testest"
+    const video={
+        "name":"123testest"
+    }
+
+      var Client_Identifier = "5cb5cb67c1e13d84f8b105e8e2c0b4f18ca6a195";
+      var Client_Secret = "LZ57KdGcZvVJnO8bakqN7spYUPHTykz++AJ5qYccM4tOX/dqLfpdOqgiirUQfUFXv/aNB3RIaQsPCimD+U+X00z+4dwNsJAHW6kyczz1rsaLBvr37NBcmwIdg6tDVfEe";
+   
+     await axios.post(
+        "https://api.vimeo.com/oauth/authorize/client",
+        { grant_type: "client_credentials" },
+        {
+          auth: {
+            username: Client_Identifier,
+            password: Client_Secret
+          }
         }
-
-          var Client_Identifier = "4c2fc19d8265a6096e92658a9f2969bc272ec54b";
-          var Client_Secret = "3k2JlOr2f/m5upQor8IpkcT01fUxMPKvVGjjBhmMHJSGo4OPQQfpIqfFnuLKmt+g6BHht89s53M+G8z5IB9YGcwAUbWN+O1kq304VehdIEg5M3x7jx5isNZQK9IDgawS";
        
-          axios.post(
-            "https://api.vimeo.com/oauth/authorize/client",
-            { grant_type: "client_credentials" },
-            {
-              auth: {
-                username: Client_Identifier,
-                password: Client_Secret
-              }
-            }
-           
-          ).then(function(response){
-            console.log("token",response.data.access_token);
-            axios.get("https://api.vimeo.com/users/213193340/albums/10879753/videos"
-            ,
-            {
-              headers: {
-                Authorization: `Bearer ${response.data.access_token}`
-              }
-            }
-          ).then(function(res){
-            console.log("result",result.id);
-            console.log("res.data.data",res.data.data);
-                strapi.service('api::course.course').update(result.id ,{
-                  data: {
-          
-                      video:res.data.data,   
-                  },
-              })        
+      ).then(async function(response){
         
-              
-            }) .catch(error => {
-              console.log("errrrorrr",error.message)
-           })
-        });
+      await  axios.get("https://api.vimeo.com/users/213493461/albums/10888770/videos" 
+        ,
+        {
+          headers: {
+            Authorization: `Bearer ${response.data.access_token}`
+          }
+        }
+      ).then(async function(res){
+    
+        vidData = await res.data.data;
+          
+        }) .catch(error => {
+          console.log("errrrorrr",error.message)
+       })
+    });
+    event.params.data.video = vidData;
+},
 
-    },
   }
 
